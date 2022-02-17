@@ -1,45 +1,133 @@
 <template>
   <main class="Container">
     <article v-if="currentArticle" class="Article">
+      <div class="Article_Cover">
+        <img :src="currentArticle.coverImage.src" alt="" />
+      </div>
       <div class="Article_Header">
         <h1 class="Article_Title">{{ currentArticle.title }}</h1>
-        <div class="Article_Data">
-          <div class="Article_Avatar">
-            <template
-              v-if="currentArticle.author && currentArticle.author.profileImage"
-            >
-              <img
-                :src="currentArticle.author.profileImage.src"
-                alt=""
-                width="32"
-                height="32"
-              />
-            </template>
-            <template v-else>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20px"
-                height="20px"
-                viewBox="0 0 24 24"
-                fill="#CCCCCC"
+        <ul class="Article_Tags">
+          <li v-for="tag in currentArticle.tags" :key="tag._id">
+            <NuxtLink :to="`/tag/${tag.slug}`">#{{ tag.name }}</NuxtLink>
+          </li>
+        </ul>
+        <div class="Article_Row">
+          <div class="Article_Author">
+            <a href="#" class="Article_Avatar">
+              <template
+                v-if="
+                  currentArticle.author && currentArticle.author.profileImage
+                "
               >
-                <path d="M0 0h24v24H0V0z" fill="none" />
-                <path
-                  d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                <img
+                  :src="currentArticle.author.profileImage.src"
+                  alt=""
+                  width="32"
+                  height="32"
                 />
-              </svg>
-            </template>
+              </template>
+              <template v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                  fill="#CCCCCC"
+                >
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>
+              </template>
+            </a>
+            <div class="Article_AuthorData">
+              <NuxtLink
+                :to="`/author/${currentArticle.author.slug}`"
+                class="Article_AuthorName"
+                >{{ authorName }}</NuxtLink
+              >
+              <time :datetime="publishDateForAttr" class="Article_Date">{{
+                publishDate
+              }}</time>
+            </div>
           </div>
-          <div class="Article_AuthorName">{{ authorName }}</div>
-          <time :datetime="publishDateForAttr" class="Article_Date">{{
-            publishDate
-          }}</time>
+          <div class="Article_Share">
+            <p class="Article_ShareLabel">Share this post</p>
+            <ul class="Article_ShareList">
+              <li>
+                <button type="button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    width="24px"
+                    fill="#cccccc"
+                  >
+                    <path
+                      d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"
+                    />
+                  </svg>
+                </button>
+              </li>
+              <li>
+                <button type="button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    width="24px"
+                    fill="#cccccc"
+                  >
+                    <path
+                      d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2m13 2h-2.5A3.5 3.5 0 0 0 12 8.5V11h-2v3h2v7h3v-7h3v-3h-3V9a1 1 0 0 1 1-1h2V5z"
+                    />
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="Article_Body" v-html="currentArticle.body"></div>
+      <div class="SnsShare">
+        <p class="SnsShare_Label">Share this post</p>
+        <ul class="SnsShare_List">
+          <li>
+            <button type="button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 0 24 24"
+                width="24px"
+                fill="#cccccc"
+              >
+                <path
+                  d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"
+                />
+              </svg>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 0 24 24"
+                width="24px"
+                fill="#cccccc"
+              >
+                <path
+                  d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2m13 2h-2.5A3.5 3.5 0 0 0 12 8.5V11h-2v3h2v7h3v-7h3v-3h-3V9a1 1 0 0 1 1-1h2V5z"
+                />
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </div>
       <aside class="Author">
-        <div class="Author_Avatar">
+        <a href="#" class="Author_Avatar">
           <template
             v-if="currentArticle.author && currentArticle.author.profileImage"
           >
@@ -64,14 +152,60 @@
               />
             </svg>
           </template>
-        </div>
+        </a>
         <div class="Author_Text">
-          <div class="Author_Name">{{ authorName }}</div>
+          <NuxtLink
+            :to="`/author/${currentArticle.author.slug}`"
+            class="Article_AuthorName"
+            >{{ authorName }}</NuxtLink
+          >
           <!-- eslint-disable vue/no-v-html -->
           <div class="Author_Description" v-html="authorSelfIntroduction"></div>
           <!-- eslint-enable vue/no-v-html -->
         </div>
       </aside>
+      <nav class="Links">
+        <NuxtLink
+          v-if="previousArticle"
+          :to="`/article/${previousArticle.slug}`"
+          class="Links_Previous"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 0 24 24"
+            width="24px"
+            fill="#333333"
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" opacity=".87" />
+            <path
+              d="M17.51 3.87L15.73 2.1 5.84 12l9.9 9.9 1.77-1.77L9.38 12l8.13-8.13z"
+            />
+          </svg>
+          Previous post
+        </NuxtLink>
+        <NuxtLink
+          v-if="nextArticle"
+          :to="`/article/${nextArticle.slug}`"
+          href="#"
+          class="Links_Next"
+        >
+          Next post
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            enable-background="new 0 0 24 24"
+            height="24px"
+            viewBox="0 0 24 24"
+            width="24px"
+            fill="#333333"
+          >
+            <g><path d="M0,0h24v24H0V0z" fill="none" /></g>
+            <g>
+              <polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12" />
+            </g>
+          </svg>
+        </NuxtLink>
+      </nav>
     </article>
   </main>
 </template>
@@ -82,11 +216,20 @@ import { formatDate } from 'utils/date'
 import { toPlainText } from '../../utils/markdown'
 
 export default {
-  async asyncData({ $config, store, params }) {
+  async asyncData({ $config, store, params, redirect }) {
     await store.dispatch('fetchApp', $config)
     await store.dispatch('fetchCurrentArticle', {
       ...$config,
       slug: params.slug,
+    })
+    if (!store.getters.currentArticle) return redirect(302, '/')
+    await store.dispatch('fetchPreviousArticle', {
+      ...$config,
+      createdAt: store.getters.currentArticle._sys.createdAt,
+    })
+    await store.dispatch('fetchNextArticle', {
+      ...$config,
+      createdAt: store.getters.currentArticle._sys.createdAt,
     })
     return {}
   },
@@ -108,7 +251,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['app', 'currentArticle']),
+    ...mapGetters(['app', 'currentArticle', 'previousArticle', 'nextArticle']),
     meta() {
       if (this.currentArticle && this.currentArticle.meta) {
         return this.currentArticle.meta
@@ -172,8 +315,26 @@ export default {
   padding: 24px;
   margin: 0 auto;
 }
+.Article_Cover {
+  width: 100%;
+  height: 0;
+  padding: 52.5% 0 0;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin: 0 0 16px;
+}
+.Article_Cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
 .Article_Header {
-  margin: 0 0 24px 0;
+  margin: 0 0 60px 0;
 }
 .Article_Title {
   font-size: 2.4rem;
@@ -182,14 +343,43 @@ export default {
   margin: 0 0 16px 0;
   padding: 0;
 }
-.Article_Data {
+.Article_Tags {
+  margin: 0 0 16px 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.Article_Tags li {
+  margin: 0 8px 8px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.4rem;
+}
+.Article_Tags li a {
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  padding: 0 8px;
+  transition: border 0.2s;
+}
+.Article_Tags li a:hover {
+  border: 1px solid #999;
+}
+.Article_Row {
+  display: flex;
+  align-items: center;
+}
+.Article_Author {
   display: flex;
   align-items: center;
 }
 .Article_Avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
   overflow: hidden;
   margin: 0 12px 0 0;
   flex-shrink: 0;
@@ -199,20 +389,75 @@ export default {
   justify-content: center;
 }
 .Article_Avatar img {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   object-fit: cover;
   font-family: 'object-fit: cover'; /* IE11 */
 }
+.Article_AuthorData {
+  flex: 1;
+}
 .Article_AuthorName {
   font-weight: bold;
-  margin: 0 8px 0 0;
+  display: block;
+  line-height: 1.5;
+  color: #333;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+.Article_AuthorName:hover {
+  text-decoration: underline;
 }
 .Article_Date {
   color: #888;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  display: block;
+}
+.Article_Share {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0 0 0 auto;
+}
+.Article_ShareLabel {
+  color: #888;
+  font-size: 1.2rem;
+  margin: 0 2px 0 0;
+  line-height: 1;
+}
+.Article_ShareList {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.Article_ShareList > li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.Article_ShareList > li > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.Article_ShareList > li > button > svg {
+  width: 20px;
+  height: 20px;
+  transition: fill 0.2s;
+}
+.Article_ShareList > li > button:hover > svg {
+  fill: #888;
 }
 .Article_Body {
-  padding: 0 0 28px 0;
+  padding: 0 0 48px 0;
+  margin: 0 0 28px 0;
+  border-bottom: 1px solid #e5e5e5;
 }
 .Article_Body >>> h1,
 .Article_Body >>> h2,
@@ -303,72 +548,70 @@ export default {
   margin: 0;
   color: #fff;
 }
-.Fav {
+@media (min-width: 600px) {
+  .Article {
+    max-width: 700px;
+    padding: 60px;
+  }
+  .Article_Cover {
+    margin: 0 0 28px;
+  }
+  .Article_ShareLabel {
+    margin: 0 4px 0 0;
+  }
+  .Article_ShareList > li > button > svg {
+    width: 24px;
+    height: 24px;
+  }
+  .Article_ShareList > li > button {
+    padding: 0 0 0 10px;
+  }
+}
+.SnsShare {
   display: flex;
   align-items: center;
+  padding: 0 0 48px 0;
 }
-.Fav_Button {
+.SnsShare_Label {
+  color: #888;
+  font-size: 1.4rem;
+  margin: 0 16px 0 0;
+}
+.SnsShare_List {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.SnsShare_List > li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.SnsShare_List > li > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  background: none;
   border: none;
-  width: 40px;
-  height: 40px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 3px 10px -8px rgba(0, 0, 0, 1);
-  position: relative;
   cursor: pointer;
 }
-.Fav_Button:focus {
-  outline: none;
-}
-.Fav_Button:focus::after {
-  content: '';
-  border: 2px solid #005fcc;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 20px;
-  z-index: 0;
-}
-.Fav._on .Fav_Button:focus::after {
-  border: 2px solid #e0245e;
-}
-.Fav_Button:hover > svg {
-  fill: #888;
-}
-.Fav_Button:active {
-  transform: scale(0.96);
-}
-.Fav_Button > svg {
-  position: absolute;
-  left: 12px;
-  top: 12px;
-  height: 18px;
-  width: 16px;
-  display: block;
-  fill: #ccc;
+.SnsShare_List > li > button > svg {
+  width: 28px;
+  height: 28px;
   transition: fill 0.2s;
 }
-.Fav > em {
-  font-style: normal;
-  font-weight: bold;
-  color: #888;
-  margin: 0 0 0 12px;
-}
-.Fav._on .Fav_Button > svg {
-  fill: #e0245e;
-  transition: none;
-}
-.Fav._on > em {
-  color: #e0245e;
+.SnsShare_List > li > button:hover > svg {
+  fill: #888;
 }
 .Author {
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   padding: 24px;
   display: flex;
-  margin: 0 0 40px 0;
+  align-items: center;
+  margin: 0 0 48px 0;
 }
 .Author_Avatar {
   width: 48px;
@@ -393,6 +636,12 @@ export default {
   padding: 0;
   font-weight: bold;
   line-height: 1.5;
+  font-size: 1.6rem;
+  color: #333;
+  text-decoration: none;
+}
+.Author_Name:hover {
+  text-decoration: underline;
 }
 .Author_Description {
   margin: 0;
@@ -404,13 +653,50 @@ export default {
   margin: 0;
   padding: 0;
 }
-@media (min-width: 600px) {
-  .Article {
-    max-width: 700px;
-    padding: 60px;
-  }
-  .Article_Header {
-    margin: 0 0 48px 0;
-  }
+.Links {
+  display: flex;
+  position: relative;
+  margin: 0 0 40px 0;
+}
+.Links::after {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: #e5e5e5;
+  left: 50%;
+  content: '';
+}
+.Links_Previous,
+.Links_Next {
+  width: 45%;
+  display: flex;
+  align-items: center;
+  color: #333;
+  text-decoration: none;
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+.Links_Previous:hover,
+.Links_Next:hover {
+  text-decoration: underline;
+}
+.Links_Previous svg,
+.Links_Next svg {
+  width: 16px;
+  height: 16px;
+}
+.Links_Previous {
+  margin: 0 auto 0 0;
+}
+.Links_Previous svg {
+  margin: 0 8px 0 0;
+}
+.Links_Next {
+  margin: 0 0 0 auto;
+  text-align: right;
+  justify-content: flex-end;
+}
+.Links_Next svg {
+  margin: 0 0 0 8px;
 }
 </style>

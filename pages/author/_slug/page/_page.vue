@@ -1,21 +1,24 @@
 <template>
-  <div>
-    <Cover v-if="app && app.cover && app.cover.value" :img="app.cover.value" />
-    <div class="Container">
-      <div class="Container_Inner">
-        <main class="Articles">
-          <div class="Articles_Inner">
-            <h2 class="Articles_Heading">Recent Articles</h2>
-            <ArticleCard
-              v-for="article in articles"
-              :key="article._id"
-              :article="article"
-            />
-          </div>
-          <Pagination :total="total" :current="pageNumber" />
-        </main>
-        <Side :tags="popularTags" :authors="authors" :archives="archives" />
-      </div>
+  <div class="Container">
+    <div class="Container_Inner">
+      <main class="Articles">
+        <div class="Articles_Inner">
+          <h2 class="Articles_Heading">
+            Articles by {{ (currentAuthor && currentAuthor.fullName) || '' }}
+          </h2>
+          <ArticleCard
+            v-for="article in articles"
+            :key="article._id"
+            :article="article"
+          />
+        </div>
+        <Pagination
+          :total="total"
+          :current="pageNumber"
+          :base-path="`/author/${(currentAuthor && currentAuthor.slug) || ''}`"
+        />
+      </main>
+      <Side :tags="popularTags" :authors="authors" :archives="archives" />
     </div>
   </div>
 </template>
@@ -33,12 +36,18 @@ export default {
 
     const pageNumber = Number(params.page)
     if (Number.isNaN(pageNumber)) return redirect(302, '/')
+    const currentAuthor =
+      store.getters.authors.find((author) => author.slug === params.slug) ||
+      null
+    if (!currentAuthor) return redirect(302, '/')
     await store.dispatch('fetchArticles', {
       ...$config,
+      author: (currentAuthor && currentAuthor._id) || '',
       page: pageNumber,
     })
 
     return {
+      currentAuthor,
       pageNumber,
     }
   },

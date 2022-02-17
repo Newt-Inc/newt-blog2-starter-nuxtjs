@@ -4,16 +4,32 @@ export const state = () => ({
   app: null,
   articles: [],
   total: 0,
-  categories: [],
+  tags: [],
   currentArticle: null,
+  previousArticle: null,
+  nextArticle: null,
+  authors: [],
+  archives: [],
 })
 
 export const getters = {
   app: (state) => state.app,
   articles: (state) => state.articles,
   total: (state) => state.total,
-  categories: (state) => state.categories,
+  tags: (state) => state.tags,
   currentArticle: (state) => state.currentArticle,
+  previousArticle: (state) => state.previousArticle,
+  nextArticle: (state) => state.nextArticle,
+  authors: (state) => {
+    return state.authors.filter((author) => author.total > 0)
+  },
+  popularTags: (state) => {
+    return state.tags
+      .filter((tag) => tag.total > 0)
+      .sort((tag1, tag2) => (tag1.total > tag2.total ? -1 : 1))
+      .slice(0, 10)
+  },
+  archives: (state) => state.archives,
 }
 
 export const mutations = {
@@ -26,11 +42,23 @@ export const mutations = {
   setTotal(state, total) {
     state.total = total
   },
-  setCategories(state, categories) {
-    state.categories = categories
+  setTags(state, tags) {
+    state.tags = tags
   },
   setCurrentArticle(state, currentArticle) {
     state.currentArticle = currentArticle
+  },
+  setPreviousArticle(state, previousArticle) {
+    state.previousArticle = previousArticle
+  },
+  setNextArticle(state, nextArticle) {
+    state.nextArticle = nextArticle
+  },
+  setAuthors(state, authors) {
+    state.authors = authors
+  },
+  setArchives(state, archives) {
+    state.archives = archives
   },
 }
 
@@ -60,9 +88,11 @@ export const actions = {
       appUid,
       pageLimit,
       search,
-      category,
+      tag,
       page,
       query,
+      author,
+      year,
     }
   ) {
     try {
@@ -88,8 +118,17 @@ export const actions = {
           },
         ]
       }
-      if (category) {
-        _query.categories = category
+      if (tag) {
+        _query.tags = tag
+      }
+      if (author) {
+        _query.author = author
+      }
+      if (year) {
+        _query['_sys.createdAt'] = {
+          gte: new Date(year.toString()).toISOString(),
+          lt: new Date((year + 1).toString()).toISOString(),
+        }
       }
       const _page = page || 1
       const _limit = pageLimit || 10
@@ -111,9 +150,9 @@ export const actions = {
       // console.error(err)
     }
   },
-  async fetchCategories(
+  async fetchTags(
     { commit },
-    { projectUid, categoryModelUid, token, apiType, appUid }
+    { projectUid, tagModelUid, articleModelUid, token, apiType, appUid }
   ) {
     try {
       const client = createClient({
@@ -123,12 +162,27 @@ export const actions = {
       })
       const { items } = await client.getContents({
         appUid,
-        modelUid: categoryModelUid,
+        modelUid: tagModelUid,
         query: {
           depth: 1,
         },
       })
-      commit('setCategories', items)
+      const tags = []
+
+      // Get the number of articles per tag
+      await items.reduce(async (prevPromise, tag) => {
+        await prevPromise
+        const { total } = await client.getContents({
+          appUid,
+          modelUid: articleModelUid,
+          query: {
+            tags: tag._id,
+            select: ['slug'],
+          },
+        })
+        tags.push({ ...tag, total })
+      }, Promise.resolve())
+      commit('setTags', tags)
     } catch (err) {
       // console.error(err)
     }
@@ -155,7 +209,157 @@ export const actions = {
       })
       commit('setCurrentArticle', items.length === 1 ? items[0] : null)
     } catch (err) {
-      return null
+      // console.error(err)
     }
+  },
+  async fetchPreviousArticle(
+    { commit },
+    { projectUid, articleModelUid, token, apiType, appUid, createdAt }
+  ) {
+    try {
+      if (!createdAt) return commit('setPreviousArticle', null)
+      const client = createClient({
+        projectUid,
+        token,
+        apiType,
+      })
+      const { items } = await client.getContents({
+        appUid,
+        modelUid: articleModelUid,
+        query: {
+          depth: 1,
+          limit: 1,
+          select: ['slug'],
+          order: ['-_sys.createdAt'],
+          '_sys.createdAt': {
+            lt: createdAt,
+          },
+        },
+      })
+      commit('setPreviousArticle', items.length === 1 ? items[0] : null)
+    } catch (err) {
+      // console.error(err)
+    }
+  },
+  async fetchNextArticle(
+    { commit },
+    { projectUid, articleModelUid, token, apiType, appUid, createdAt }
+  ) {
+    try {
+      if (!createdAt) return commit('setNextArticle', null)
+      const client = createClient({
+        projectUid,
+        token,
+        apiType,
+      })
+      const { items } = await client.getContents({
+        appUid,
+        modelUid: articleModelUid,
+        query: {
+          depth: 1,
+          limit: 1,
+          select: ['slug'],
+          order: ['_sys.createdAt'],
+          '_sys.createdAt': {
+            gt: createdAt,
+          },
+        },
+      })
+      commit('setNextArticle', items.length === 1 ? items[0] : null)
+    } catch (err) {
+      // console.error(err)
+    }
+  },
+  async fetchAuthors(
+    { commit },
+    { projectUid, authorModelUid, articleModelUid, token, apiType, appUid }
+  ) {
+    try {
+      const client = createClient({
+        projectUid,
+        token,
+        apiType,
+      })
+      const { items } = await client.getContents({
+        appUid,
+        modelUid: authorModelUid,
+        query: {
+          depth: 1,
+        },
+      })
+      const authors = []
+
+      // Get the number of articles per tag
+      await items.reduce(async (prevPromise, author) => {
+        await prevPromise
+        const { total } = await client.getContents({
+          appUid,
+          modelUid: articleModelUid,
+          query: {
+            author: author._id,
+            select: ['slug'],
+          },
+        })
+        authors.push({ ...author, total })
+      }, Promise.resolve())
+      commit('setAuthors', authors)
+    } catch (err) {
+      // console.error(err)
+    }
+  },
+  async fetchArchives(
+    { commit },
+    { projectUid, articleModelUid, token, apiType, appUid }
+  ) {
+    const client = createClient({
+      projectUid,
+      token,
+      apiType,
+    })
+    const { items } = await client.getContents({
+      appUid,
+      modelUid: articleModelUid,
+      query: {
+        depth: 1,
+        limit: 1,
+        order: ['_sys.createdAt'],
+        select: ['slug', '_sys.createdAt'],
+      },
+    })
+    const oldestArticle = items[0] || null
+    if (!oldestArticle) return commit('setArchives', [])
+
+    let currentYear = new Date(
+      (oldestArticle && oldestArticle._sys.createdAt) || new Date()
+    ).getFullYear()
+    const thisYear = new Date().getFullYear()
+
+    const archives = []
+    while (currentYear <= thisYear) {
+      archives.splice(0, 0, {
+        year: currentYear,
+        count: 0,
+      })
+      currentYear++
+    }
+    await archives.reduce(async (prevPromise, archive) => {
+      await prevPromise
+      const { total } = await client.getContents({
+        appUid,
+        modelUid: articleModelUid,
+        query: {
+          depth: 1,
+          limit: 1,
+          select: ['slug'],
+          '_sys.createdAt': {
+            gte: new Date(archive.year.toString()).toISOString(),
+            lt: new Date((archive.year + 1).toString()).toISOString(),
+          },
+        },
+      })
+      archive.count = total
+    }, Promise.resolve())
+
+    commit('setArchives', archives)
   },
 }

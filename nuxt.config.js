@@ -7,8 +7,9 @@ export default {
     token: 'CDN APIトークン',
     apiType: 'cdn',
     articleModelUid: 'article',
-    categoryModelUid: 'category',
-    pageLimit: 12,
+    tagModelUid: 'tag',
+    authorModelUid: 'author',
+    pageLimit: 1,
   },
 
   // Target: https://go.nuxtjs.dev/config-target
