@@ -1,8 +1,8 @@
 <template>
   <div class="Wrapper">
-    <Header :title="title" :icon="icon" />
+    <Header :app="app" />
     <Nuxt />
-    <Footer :title="title" :icon="icon" />
+    <Footer :app="app" />
     <Badge />
   </div>
 </template>
@@ -12,12 +12,6 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters(['app']),
-    title() {
-      return (this.app && this.app.name) || 'Blog'
-    },
-    icon() {
-      return (this.app && this.app.icon && this.app.icon.value) || '✏️'
-    },
   },
 }
 </script>
