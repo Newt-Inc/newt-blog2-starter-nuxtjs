@@ -9,7 +9,7 @@ export default {
     articleModelUid: 'article',
     tagModelUid: 'tag',
     authorModelUid: 'author',
-    pageLimit: 1,
+    pageLimit: 12,
   },
 
   // Target: https://go.nuxtjs.dev/config-target
