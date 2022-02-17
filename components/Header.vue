@@ -106,7 +106,7 @@ export default {
   justify-content: center;
   font-size: 1.8rem;
   flex-shrink: 0;
-  margin: 0 8px -2px 0;
+  margin: 0 10px -2px 0;
 }
 .Title_Icon img {
   width: 26px;
