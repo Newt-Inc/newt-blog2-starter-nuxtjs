@@ -2,7 +2,7 @@ import { resolve } from 'path'
 
 export default {
   publicRuntimeConfig: {
-    projectUid: 'プロジェクトUID',
+    spaceUid: 'スペースUID',
     appUid: 'AppUID',
     token: 'CDN APIトークン',
     apiType: 'cdn',

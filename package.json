@@ -15,7 +15,7 @@
     "luxon": "^2.1.1",
     "markdown-it": "^12.2.0",
     "markdown-it-plain-text": "^0.3.0",
-    "newt-client-js": "^1.1.0",
+    "newt-client-js": "^2.0.0",
     "nuxt": "^2.15.7"
   },
   "devDependencies": {
