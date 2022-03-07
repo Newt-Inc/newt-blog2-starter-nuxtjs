@@ -63,10 +63,10 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchApp({ commit }, { projectUid, token, apiType, appUid }) {
+  async fetchApp({ commit }, { spaceUid, token, apiType, appUid }) {
     try {
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -81,7 +81,7 @@ export const actions = {
   async fetchArticles(
     { commit },
     {
-      projectUid,
+      spaceUid,
       articleModelUid,
       token,
       apiType,
@@ -97,7 +97,7 @@ export const actions = {
   ) {
     try {
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -152,11 +152,11 @@ export const actions = {
   },
   async fetchTags(
     { commit },
-    { projectUid, tagModelUid, articleModelUid, token, apiType, appUid }
+    { spaceUid, tagModelUid, articleModelUid, token, apiType, appUid }
   ) {
     try {
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -189,12 +189,12 @@ export const actions = {
   },
   async fetchCurrentArticle(
     { commit },
-    { projectUid, articleModelUid, token, apiType, appUid, slug }
+    { spaceUid, articleModelUid, token, apiType, appUid, slug }
   ) {
     try {
       if (!slug) return commit('setCurrentArticle', null)
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -214,12 +214,12 @@ export const actions = {
   },
   async fetchPreviousArticle(
     { commit },
-    { projectUid, articleModelUid, token, apiType, appUid, createdAt }
+    { spaceUid, articleModelUid, token, apiType, appUid, createdAt }
   ) {
     try {
       if (!createdAt) return commit('setPreviousArticle', null)
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -243,12 +243,12 @@ export const actions = {
   },
   async fetchNextArticle(
     { commit },
-    { projectUid, articleModelUid, token, apiType, appUid, createdAt }
+    { spaceUid, articleModelUid, token, apiType, appUid, createdAt }
   ) {
     try {
       if (!createdAt) return commit('setNextArticle', null)
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -272,11 +272,11 @@ export const actions = {
   },
   async fetchAuthors(
     { commit },
-    { projectUid, authorModelUid, articleModelUid, token, apiType, appUid }
+    { spaceUid, authorModelUid, articleModelUid, token, apiType, appUid }
   ) {
     try {
       const client = createClient({
-        projectUid,
+        spaceUid,
         token,
         apiType,
       })
@@ -309,10 +309,10 @@ export const actions = {
   },
   async fetchArchives(
     { commit },
-    { projectUid, articleModelUid, token, apiType, appUid }
+    { spaceUid, articleModelUid, token, apiType, appUid }
   ) {
     const client = createClient({
-      projectUid,
+      spaceUid,
       token,
       apiType,
     })

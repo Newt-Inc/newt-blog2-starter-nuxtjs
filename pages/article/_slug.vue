@@ -56,7 +56,7 @@
             <p class="Article_ShareLabel">Share this post</p>
             <ul class="Article_ShareList">
               <li>
-                <button type="button">
+                <button type="button" @click="shareOnTwitter">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="24px"
@@ -71,7 +71,7 @@
                 </button>
               </li>
               <li>
-                <button type="button">
+                <button type="button" @click="shareOnFacebook">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="24px"
@@ -95,7 +95,7 @@
         <p class="SnsShare_Label">Share this post</p>
         <ul class="SnsShare_List">
           <li>
-            <button type="button">
+            <button type="button" @click="shareOnTwitter">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24px"
@@ -110,7 +110,7 @@
             </button>
           </li>
           <li>
-            <button type="button">
+            <button type="button" @click="shareOnFacebook">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24px"
@@ -304,6 +304,26 @@ export default {
           this.currentArticle.author &&
           this.currentArticle.author.introduction) ||
         ''
+      )
+    },
+  },
+  methods: {
+    shareOnTwitter() {
+      window.open(
+        'https://twitter.com/share?url=' +
+          encodeURIComponent(window.location.href) +
+          '&text=' +
+          document.title,
+        '',
+        'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=600'
+      )
+    },
+    shareOnFacebook() {
+      window.open(
+        '//www.facebook.com/sharer.php?src=bm&u=' +
+          encodeURIComponent(location.href),
+        '_blank',
+        'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=600'
       )
     },
   },
