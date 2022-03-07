@@ -160,7 +160,7 @@
             >{{ authorName }}</NuxtLink
           >
           <!-- eslint-disable vue/no-v-html -->
-          <div class="Author_Description" v-html="authorSelfIntroduction"></div>
+          <div class="Author_Description" v-html="authorBio"></div>
           <!-- eslint-enable vue/no-v-html -->
         </div>
       </aside>
@@ -213,7 +213,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { formatDate } from 'utils/date'
-import { toPlainText } from '../../utils/markdown'
+import { htmlToText } from 'html-to-text'
 
 export default {
   async asyncData({ $config, store, params, redirect }) {
@@ -272,13 +272,23 @@ export default {
         return this.meta.description
       }
       if (this.currentArticle && this.currentArticle.body) {
-        return toPlainText(this.currentArticle.body).slice(0, 200)
+        return htmlToText(this.currentArticle.body, {
+          selectors: [
+            {
+              selector: 'img',
+              format: 'skip',
+            },
+          ],
+        }).slice(0, 200)
       }
       return ''
     },
     ogImage() {
       if (this.meta && this.meta.ogImage) {
         return this.meta.ogImage.src
+      }
+      if (this.currentArticle && this.currentArticle.coverImage) {
+        return this.currentArticle.coverImage.src
       }
       return ''
     },
@@ -298,11 +308,11 @@ export default {
         'NO NAME'
       )
     },
-    authorSelfIntroduction() {
+    authorBio() {
       return (
         (this.currentArticle &&
           this.currentArticle.author &&
-          this.currentArticle.author.introduction) ||
+          this.currentArticle.author.biography) ||
         ''
       )
     },

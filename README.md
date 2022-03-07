@@ -86,17 +86,17 @@ $ yarn start
 
 ## Newtスペースの構成
 
-`Blog` appの中にArticle, Tag, Authorの3つのモデルを作ります。
+`Blog2` appの中にArticle, Tag, Authorの3つのモデルを作ります。
 
 | App名（任意） | モデル名（モデルUID） |
 | --- | --- |
-| Blog | Article (`article`) |
+| Blog2 | Article (`article`) |
 |  | Tag (`tag`) |
 |  | Author (`author`) |
 
 ### Article（`uid: article`）モデル
 
-| フィールドID | フィールド名 | フィールドID	フィールド名 | フィールドID	フィールド名 |
+| フィールドID | フィールド名 | フィールドタイプ | オプション |
 | --- | --- | --- | --- |
 | title | タイトル | テキスト | 必須フィールド, このフィールドをタイトルに使う |
 | slug | スラッグ | テキスト | 必須フィールド |
@@ -108,16 +108,24 @@ $ yarn start
 
 ### Tag(`uid: tag`）モデル
 
-| フィールドID | フィールド名 | フィールドID	フィールド名 | フィールドID	フィールド名 |
+| フィールドID | フィールド名 | フィールドタイプ | オプション |
 | --- | --- | --- | --- |
 | name | 名前 | テキスト | 必須フィールド, このフィールドをタイトルに使う |
 | slug | スラッグ | テキスト | 必須フィールド |
 
 ### Author（`uid: author`）モデル
 
-| フィールドID | フィールド名 | フィールドID	フィールド名 | フィールドID	フィールド名 |
+| フィールドID | フィールド名 | フィールドタイプ | オプション |
 | --- | --- | --- | --- |
 | fullName | 名前 | テキスト | 必須フィールド, このフィールドをタイトルに使う |
 | slug | スラッグ | テキスト | 必須フィールド |
 | profileImage | プロフィール画像 | 画像 |  |
-| introduction | 自己紹介 | Markdown or リッチテキスト |  |
+| biography | 自己紹介 | Markdown or リッチテキスト |  |
+
+### メタ情報（`id: META`）カスタムフィールドタイプ
+
+| フィールドID | フィールド名 | フィールドタイプ | オプション |
+| --- | --- | --- | --- |
+| title | Title | テキスト | |
+| description | Description | テキスト | |
+| ogImage | OG画像 | 画像 |  |
