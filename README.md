@@ -129,3 +129,7 @@ $ yarn start
 | title | Title | テキスト | |
 | description | Description | テキスト | |
 | ogImage | OG画像 | 画像 |  |
+
+## License
+
+[MIT License](https://github.com/Newt-Inc/newt-blog2-starter-nuxtjs/blob/main/LICENSE)
