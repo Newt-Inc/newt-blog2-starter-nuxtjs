@@ -243,9 +243,28 @@ export default {
           content: this.description,
         },
         {
+          hid: 'og:type',
+          property: 'og:type',
+          content: 'article'
+        },
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.title,
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.description,
+        },
+        {
           hid: 'og:image',
-          name: 'og:image',
+          property: 'og:image',
           content: this.ogImage,
+        },
+        {
+          name: 'twitter:card',
+          content: 'summary_large_image'
         },
       ],
     }
