@@ -14,7 +14,7 @@
     "core-js": "^3.15.1",
     "html-to-text": "^8.1.0",
     "luxon": "^2.1.1",
-    "newt-client-js": "^2.0.0",
+    "newt-client-js": "^3.0.1",
     "nuxt": "^2.15.7"
   },
   "devDependencies": {
