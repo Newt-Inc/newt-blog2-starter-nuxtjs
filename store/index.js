@@ -198,16 +198,15 @@ export const actions = {
         token,
         apiType,
       })
-      const { items } = await client.getContents({
+      const article = await client.getFirstContent({
         appUid,
         modelUid: articleModelUid,
         query: {
           depth: 2,
-          limit: 1,
           slug,
         },
       })
-      commit('setCurrentArticle', items.length === 1 ? items[0] : null)
+      commit('setCurrentArticle', article)
     } catch (err) {
       // console.error(err)
     }
@@ -223,12 +222,11 @@ export const actions = {
         token,
         apiType,
       })
-      const { items } = await client.getContents({
+      const article = await client.getFirstContent({
         appUid,
         modelUid: articleModelUid,
         query: {
           depth: 1,
-          limit: 1,
           select: ['slug'],
           order: ['-_sys.createdAt'],
           '_sys.createdAt': {
@@ -236,7 +234,7 @@ export const actions = {
           },
         },
       })
-      commit('setPreviousArticle', items.length === 1 ? items[0] : null)
+      commit('setPreviousArticle', article)
     } catch (err) {
       // console.error(err)
     }
@@ -252,12 +250,11 @@ export const actions = {
         token,
         apiType,
       })
-      const { items } = await client.getContents({
+      const article = await client.getFirstContent({
         appUid,
         modelUid: articleModelUid,
         query: {
           depth: 1,
-          limit: 1,
           select: ['slug'],
           order: ['_sys.createdAt'],
           '_sys.createdAt': {
@@ -265,7 +262,7 @@ export const actions = {
           },
         },
       })
-      commit('setNextArticle', items.length === 1 ? items[0] : null)
+      commit('setNextArticle', article)
     } catch (err) {
       // console.error(err)
     }
@@ -316,17 +313,15 @@ export const actions = {
       token,
       apiType,
     })
-    const { items } = await client.getContents({
+    const oldestArticle = await client.getFirstContent({
       appUid,
       modelUid: articleModelUid,
       query: {
         depth: 1,
-        limit: 1,
         order: ['_sys.createdAt'],
         select: ['slug', '_sys.createdAt'],
       },
     })
-    const oldestArticle = items[0] || null
     if (!oldestArticle) return commit('setArchives', [])
 
     let currentYear = new Date(
